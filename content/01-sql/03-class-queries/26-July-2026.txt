@@ -1,0 +1,96 @@
+-- Identify all returns that occurred before 2017
+select *
+from dab4pt.store.`returns`
+where return_date < '2017-01-01'
+order by return_date desc;
+
+-- What were the orders that happened in 2019?
+SELECT *
+from dab4pt.store.orders
+where order_date between '2019-01-01' and '2019-12-31'
+order by order_date desc;
+
+--Extract Function:
+SELECT
+  return_date,
+  EXTRACT(YEAR FROM return_date) AS year,
+  EXTRACT(Quarter FROM return_date) AS quarter,
+  EXTRACT(MONTH FROM return_date) AS month,
+  EXTRACT(DAY FROM return_date) AS day,
+  EXTRACT(DAYOFWEEK  FROM return_date) AS day_of_week
+FROM `store.returns`;
+
+
+-- What were the orders that happened in 2019?
+SELECT *
+from dab4pt.store.orders
+where extract(Year from order_date)=2019;
+
+
+-- What were the orders that happened in DEC 2017?
+
+Select *
+from dab4pt.store.orders
+where extract(year from order_date)=2017 and extract(month from order_date)=12;
+
+SELECT
+  return_date,
+  DATE_TRUNC(return_date, YEAR) AS year_truncated,
+  DATE_TRUNC(return_date, QUARTER) AS quarter_truncated,
+  DATE_TRUNC(return_date, MONTH) AS month_truncated,
+  DATE_TRUNC(return_date, WEEK(SUNDAY)) AS week_truncated,  -- Week starting Sunday
+  DATE_TRUNC(return_date, DAY) AS day_truncated
+FROM `store.returns`;
+
+-- What were the orders that happened in DEC 2017?
+SELECT *
+from dab4pt.store.orders
+where date_trunc(order_date,month)='2017-12-01';
+
+
+-- What were the orders that happened in DEC in all years?
+select *
+from dab4pt.store.orders
+where extract(month from order_date)=12;
+
+-- Show all rows where ship date belongs to the year 2018 using trunc
+select *
+from dab4pt.store.orders
+where date_trunc(ship_date, year)='2018-01-01';
+
+--Show profit per ship_mode
+select ship_mode,sum(profit)
+from dab4pt.store.orders
+group by ship_mode;
+
+--Show profit per ship_mode and postal code
+select ship_mode,postal_code,sum(profit)as `total profit`,avg(profit) as average_profit
+from dab4pt.store.orders
+group by ship_mode,postal_code;
+
+
+select ship_mode,postal_code,round(sum(profit),0) as `total profit`,round(avg(profit),2) as average_profit
+from dab4pt.store.orders
+group by ship_mode,postal_code;
+
+--Find average cost per category.
+select category, avg(product_cost_to_consumer)
+from dab4pt.store.products
+group by category;
+
+--Find total sales by ship_mode for orders where sales are greater than 100.
+--sort the results in decsending order.
+select ship_mode,sum(sales) as total_sales
+from dab4pt.store.orders
+where sales>100
+group by ship_mode
+order by 2 desc;
+
+
+--Find total sales by ship_mode and region for orders where sales are greater than 100.
+--sort the results in decsending order.
+select ship_mode,region_id,sum(sales) as total_sales
+from dab4pt.store.orders
+where sales>100
+group by 1,2
+order by 3 desc;

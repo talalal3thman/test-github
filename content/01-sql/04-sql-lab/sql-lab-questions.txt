@@ -1,0 +1,131 @@
+
+-- ===============================================================================
+--                                 SQL LAB
+-- ===============================================================================
+
+/*-------------------------------------------------------------------------------------------------
+Q1: Find all product_ids where the middle category code contains '-CO-' (e.g., TEC-CO-10003777).
+Return product_id and product_name. (404 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q2: Find all customer_names where the first name is exactly 4 letters long.
+Use the underscore wildcard. Return customer_name and segment. (426 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q3: Find all salesperson names where the last name starts with the letter 'A'.
+Return salesperson and country. (19 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q4: Find all postal codes that are exactly 5 digits long. Return postal_code and
+the count of orders for each. use cast(postal_code as string) in where (552 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q5: Calculate total sales per customer_id. Only include customers whose total sales
+exceed 1,000. Return customer_id and total_sales sorted descending.(795 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q6: Calculate the average discount per product_id. Only show products with an
+average discount greater than 0.03. Return product_id and avg_discount. (9994 rows) 
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q7: Count the number of orders per month. Only include months with more than 50k orders.
+Return  month and order_count. (10 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q8: Calculate total return_quantity per reason_returned. Only show reasons where the
+total returned quantity is greater than 10. Return reason_returned and total_returned. (4 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q9: Count how many countries exist in each sub_region. Only include sub_regions
+with 3 or more countries. Return sub_region and country_count. (14 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q10: Show order_id, profit, and a  new column profit_level :
+'Negative' if profit <= 0, 'Low' if profit less than or equal 10,
+'Medium' if profit less than or equal 50, 'High'  above 50 . (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q11: Calculate the maximum sales value per postal_code. Only show postal codes where
+the maximum sales exceed 5,000. Return postal_code and max_sales. (89 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q12: Show all orders with their corresponding product names and categories.
+Return order_id, product_name, and category. (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q13: Classify discount levels: 'No Discount' (0), 'Small' (0–0.05), 'Medium' (0.05–0.1),
+'High' (>0.1). Show order_id, discount, and discount_level. (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q14 Show all orders with their corresponding product names and categories.
+Show order_id, product_name, and category. (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q15 Show all returns with the product details and the customer name who originally ordered.
+Return return_date, product_name, customer_name, and reason_returned. (41868 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q16: Show all products and their total sales. If a product was never ordered, show 0.
+Return product_name and total_sales. ( 10292 Rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q17 Find orders placed by customers in the 'Corporate' segment, including the region country.
+Return order_id, customer_name, country, and sales. (296869 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q18: Show returns with full order details (sales, quantity, profit) and product info.
+Only include returns where the original order profit was negative. Return return_date, order_id,
+product_name, sales, and profit.  (612 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q19 Show all customers and the date of their very first order. If they never ordered, show NULL.
+Return customer_name and first_order_date. (795 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q20: Find all customers who ordered at least one product from the 'Storage' subcategory.
+Show customer_id and customer_name. (793 rows)
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Q21: Find products that were ordered more than 100 times but returned fewer than 5 times. (2811 rows)
+-------------------------------------------------------------------------------------------------*/
+

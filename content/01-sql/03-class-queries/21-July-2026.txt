@@ -1,0 +1,114 @@
+--Show all Transactions from orders table
+SELECT *
+FROM dab4pt.store.orders;
+
+--show me the ids list of orders?
+SELECT order_id
+From dab4pt.store.orders;
+
+-- show product id and product name columns from products table
+SELECT  product_id, product_name
+from dab4pt.store.products;
+
+-- Show countries , regions and salesperson.
+Select country, region, salesperson
+From dab4pt.store.regions;
+
+--Show distinct Salesperson
+SELECT distinct salesperson
+from dab4pt.store.regions;
+
+-- show me unique values of category column from products table
+select distinct category
+from dab4pt.store.products;
+
+-- How many unique products do we have?
+select distinct product_id
+from dab4pt.store.products;
+
+
+-- show me the first 10 transactions of order table, sorted by profit decending order
+SELECT *
+from dab4pt.store.orders
+order by profit desc
+limit 10;
+
+-- show me first 20 order_id, ship_date,sales sorted by sales decending order
+select order_id, ship_date, sales
+from dab4pt.store.orders
+order by profit desc
+limit 20;
+
+
+--List order_ids with the lowest profit. show lowest 15
+SELECT order_id
+FROM dab4pt.store.orders
+order by profit asc
+limit 15;
+
+
+--Display all orders sorted by order date from newest to oldest.
+SELECT *
+FROM dab4pt.store.orders
+order by order_date desc;
+
+
+
+
+select distinct ship_mode
+from dab4pt.store.orders;
+
+-- Show all transaction happend in First Class
+
+select *
+from dab4pt.store.orders
+where ship_mode = 'First Class';
+
+
+select *
+from dab4pt.store.orders
+where ship_mode LIKE 'First Class';
+
+
+select *
+from dab4pt.store.orders
+where ship_mode LIKE 'First %';
+
+--Which countries are in the "EMEA" region?
+select country
+from dab4pt.store.regions
+where region = 'EMEA';
+
+--Which countries are in the "EMEA" and 'APAC' region?
+
+
+Select country
+from dab4pt.store.regions
+where region ='EMEA' or region= 'APAC';
+
+
+
+Select country
+from dab4pt.store.regions
+where region in ('EMEA','APAC');
+
+-- Show all transaction happend in First Class and second class?
+SELECT *
+from dab4pt.store.orders
+where ship_mode = 'First Class' or ship_mode = 'Second Class';
+
+SELECT *
+from dab4pt.store.orders
+where ship_mode in ('First Class','Second Class');
+
+
+--Which countries are start with B?
+select country
+from dab4pt.store.regions
+where country like 'Ba_g%'
+
+
+--Which countries that second letter is 'a'?
+select country
+from dab4pt.store.regions
+where country like '_a%'

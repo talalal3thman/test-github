@@ -1,0 +1,87 @@
+--Find all orders where sales are above the average sales.
+SELECT *
+from store.orders
+where sales> (select avg(sales)
+from `store.orders`);
+
+--Find the sum profit of all years for customers who placed orders in 2020, return only positive profit
+
+select customer_id, sum(profit) as total_profit
+from store.orders
+where customer_id in (select distinct customer_id
+from store.orders
+where extract(year from order_date)=2020)
+group by 1
+having total_profit > 0
+order by 2 asc;
+
+
+
+-- Find salespeople that have purchased from the store as a customers. hint: use customers table
+
+
+select distinct customer_name
+from store.customers
+where customer_name in (select distinct salesperson
+from store.regions)
+
+
+--Find all orders with profit higher than the maximum profit achieved by any 'Second Class' order. Return order_id, profit
+
+select order_id,profit
+from store.orders
+where profit>(select max(profit)
+from store.orders
+where ship_mode='Second Class')
+
+
+--Find all products that have never been returned
+SELECT *
+From store.products
+where product_id not in (select distinct product_id
+from store.returns)
+
+
+--Find all customer name who have placed orders in more than or equal 100 distinct region
+
+SELECT customer_name
+from store.customers
+where customer_id in (select customer_id
+from store.orders
+group by 1
+having count(distinct region_id)>=100);
+
+--Find all customers name and Id for who have never ordered a product with a discount greater than 0.05
+select customer_name
+from store.customers
+where customer_id not in
+(select distinct customer_id
+from store.orders
+where discount>0.05)
+
+
+
+select customer_name
+from store.customers c
+inner join store.orders o
+using(customer_id)
+where customer_id not in
+(select distinct customer_id
+from store.orders
+where discount>0.05)
+
+
+
+--Create a full region label combining region, and sub-region.
+
+SELECT
+  CONCAT(region,' | ' ,sub_region) AS region_full_label
+FROM `store.regions`;
+
+
+--Split
+SELECT
+  customer_name,
+  SPLIT(customer_name, ' ')[SAFE_OFFSET(0)] AS first_name,
+  SPLIT(customer_name, ' ')[SAFE_OFFSET(1)] AS last_name
+FROM `store.customers`;

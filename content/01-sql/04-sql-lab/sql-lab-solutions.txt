@@ -1,0 +1,444 @@
+-- ===============================================================================
+--                               SQL LAB (ANSWERS)
+-- ===============================================================================
+
+/*-------------------------------------------------------------------------------------------------
+Q1: Find all product_ids where the middle category code contains '-CO-' (e.g., TEC-CO-10003777).
+Return product_id and product_name. (404 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT product_id, product_name
+FROM `dsb-pt-123456.Super_store.Products`
+WHERE product_id LIKE '%-CO-%';
+
+-- COMMENT: Rephrase the 'middle category', because it's misunderstood with product category
+
+-- +-----------------+-----------------------------+
+-- | product_id      | product_name                |
+-- +-----------------+-----------------------------+
+-- | TEC-CO-10001375 | Brother Copy Machine, Color |
+-- | TEC-CO-10001595 | Brother Copy Machine, Color |
+-- | TEC-CO-10001626 | Brother Copy Machine, Color |
+-- | ...             | ...                         |
+-- +-----------------+-----------------------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q2: Find all customer_names where the first name is exactly 4 letters long.
+Use the underscore wildcard. Return customer_name and segment. (426 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT customer_name, segment
+FROM `dsb-pt-123456.Super_store.Customers`
+WHERE customer_name LIKE '____ %';
+-- WHERE customer_name NOT LIKE '% %'; -- this line to check if there are customers with single name
+
+-- COMMENT: There is only one customer with not following this type "First_name Last_name",
+-- which is Corey-Lock
+
+-- +--------------------+----------+
+-- | customer_name      | segment  |
+-- +--------------------+----------+
+-- | Adam Shillingsburg | Consumer |
+-- | Adam Shillingsburg | Consumer |
+-- | Alan Barnes        | Consumer |
+-- | ...                | ...      |
+-- +--------------------+----------+
+
+/*-------------------------------------------------------------------------------------------------
+Q3: Find all salesperson names where the last name starts with the letter 'A'.
+Return salesperson and country. (19 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT salesperson, country
+FROM `dsb-pt-123456.Super_store.Regions`
+WHERE salesperson LIKE '% A%';
+
+-- +---------------+------------+
+-- | salesperson   | country    |
+-- +---------------+------------+
+-- | Agwe Aristide | Guadeloupe |
+-- | Agwe Aristide | Jamaica    |
+-- | Agwe Aristide | Barbados   |
+-- | ...           | ...        |
+-- +---------------+------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q4: Find all postal codes that are exactly 5 digits long. Return postal_code and
+the count of orders for each. use cast(postal_code as string) in where (552 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT postal_code, COUNT(*) AS order_count
+FROM `dsb-pt-123456.Super_store.Orders`
+WHERE CAST(postal_code AS string) LIKE '_____'
+GROUP BY postal_code;
+
+-- COMMENT: you can easily use LENGTH() instead of LIKE
+
+-- +-------------+-------------+
+-- | postal_code | order_count |
+-- +-------------+-------------+
+-- | 52302.0     | 138         |
+-- | 38401.0     | 381         |
+-- | 24153.0     | 378         |
+-- | ...         | ...         |
+-- +-------------+-------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q5: Calculate total sales per customer_id. Only include customers whose total sales
+exceed 1,000. Return customer_id and total_sales sorted descending.(795 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT customer_id, SUM(sales) AS total_sales
+FROM `dsb-pt-123456.Super_store.Orders`
+GROUP BY customer_id
+HAVING total_sales > 1000
+ORDER BY total_sales DESC;
+
+-- +-------------+--------------------+
+-- | customer_id | total_sales        |
+-- +-------------+--------------------+
+-- | TA-21385    | 1050617.2000000014 |
+-- | JW-15220    | 857503.89999999385 |
+-- | CC-12370    | 822759.079999996   |
+-- | ...         | ...                |
+-- +-------------+--------------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q6: Calculate the average discount per product_id. Only show products with an
+average discount greater than 0.03. Return product_id and avg_discount. (9994 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT product_id, AVG(discount) AS avg_discount
+FROM `dsb-pt-123456.Super_store.Orders`
+GROUP BY product_id
+HAVING avg_discount > 0.03;
+
+-- +------------------+---------------------+
+-- | product_id       | avg_discount        |
+-- +------------------+---------------------+
+-- | OFF-ACC-10000375 | 0.17622641509433964 |
+-- | OFF-ACC-10000497 | 0.03960000000000001 |
+-- | OFF-ACC-10000687 | 0.11699029126213595 |
+-- | ...              | ...                 |
+-- +------------------+---------------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q7: Count the number of orders per month. Only include months with more than 50k orders.
+Return  month and order_count. (10 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT
+  EXTRACT(month FROM order_date) AS month,
+  COUNT(*) AS order_count
+FROM `dsb-pt-123456.Super_store.Orders`
+GROUP BY 1
+HAVING order_count > 50000
+ORDER BY 1;
+
+-- +-------+-------------+
+-- | month | order_count |
+-- +-------+-------------+
+-- | 1     | 63665       |
+-- | 4     | 51295       |
+-- | 5     | 68410       |
+-- | 6     | 78862       |
+-- | 7     | 77638       |
+-- | 8     | 94842       |
+-- | 9     | 107976      |
+-- | 10    | 114123      |
+-- | 11    | 129649      |
+-- | 12    | 120984      |
+-- +-------+-------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q8: Calculate total return_quantity per reason_returned. Only show reasons where the
+total returned quantity is greater than 10. Return reason_returned and total_returned. (4 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT reason_returned, SUM(return_quantity) AS total_returned
+FROM `dsb-pt-123456.Super_store.Returns`
+GROUP BY reason_returned
+HAVING total_returned > 10;
+
+-- COMMENT: there are only 4 reasons for returning products.
+
+-- +-----------------+----------------+
+-- | reason_returned | total_returned |
+-- +-----------------+----------------+
+-- | Not Given       | 19969          |
+-- | Not Needed      | 7032           |
+-- | Wrong Color     | 8152           |
+-- | Wrong Item      | 16597          |
+-- +-----------------+----------------+
+
+
+/*-------------------------------------------------------------------------------------------------
+Q9: Count how many countries exist in each sub_region. Only include sub_regions
+with 3 or more countries. Return sub_region and country_count. (14 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT sub_region, COUNT(DISTINCT country) AS country_count
+FROM `dsb-pt-123456.Super_store.Regions`
+GROUP BY sub_region
+HAVING country_count >= 3;
+
+-- +--------------+---------------+
+-- | sub_region   | country_count |
+-- +--------------+---------------+
+-- | Central Asia | 5             |
+-- | Eastern Asia | 6             |
+-- | Oceania      | 3             |
+-- | ...          | ...           |
+-- +--------------+---------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q10: Show order_id, profit, and a  new column profit_level :
+'Negative' if profit <= 0, 'Low' if profit less than or equal 10,
+'Medium' if profit less than or equal 50, 'High'  above 50 . (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT
+  order_id,
+  profit,
+  CASE
+    WHEN profit <= 0 THEN 'Negative'
+    WHEN profit <= 10 THEN 'Low'
+    WHEN profit <= 50 THEN 'Medium'
+    ELSE 'High'
+    END AS profit_level
+FROM `dsb-pt-123456.Super_store.Orders`;
+
+-- +-----------------+--------+--------------+
+-- | order_id        | profit | profit_level |
+-- +-----------------+--------+--------------+
+-- | EG-2018-8260    | 2.16   | Low          |
+-- | AO-2016-7110    | 6.48   | Low          |
+-- | AO-2016-5771802 | 0.0    | Negative     |
+-- | ...             | ...    | ...          |
+-- +-----------------+--------+--------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q11: Calculate the maximum sales value per postal_code. Only show postal codes where
+the maximum sales exceed 5,000. Return postal_code and max_sales. (89 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT postal_code, MAX(sales) AS max_sales
+FROM `dsb-pt-123456.Super_store.Orders`
+GROUP BY postal_code
+HAVING max_sales > 5000;
+
+-- +-------------+-----------+
+-- | postal_code | max_sales |
+-- +-------------+-----------+
+-- | null        | 22638.48  |
+-- | 90805.0     | 5211.12   |
+-- | 94122.0     | 9099.93   |
+-- | 53209.0     | 8399.98   |
+-- | ...         | ...       |
+-- +-------------+-----------+
+
+/*-------------------------------------------------------------------------------------------------
+Q12: Show all orders with their corresponding product names and categories.
+Return order_id, product_name, and category. (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT o.order_id, p.product_name, p.category
+FROM `dsb-pt-123456.Super_store.Orders` o
+INNER JOIN `dsb-pt-123456.Super_store.Products` p
+  ON o.product_id = p.product_id;
+
+-- +-----------------+------------------------------------+-----------------+
+-- | order_id        | product_name                       | category        |
+-- +-----------------+------------------------------------+-----------------+
+-- | EG-2018-8260    | Accos Staples, 12 Pack             | Office Supplies |
+-- | AO-2016-7110    | Accos Rubber Bands, Assorted Sizes | Office Supplies |
+-- | AO-2016-5771802 | Accos Rubber Bands, Assorted Sizes | Office Supplies |
+-- | ...             | ...                                | ...             |
+-- +-----------------+------------------------------------+-----------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q13: Classify discount levels: 'No Discount' (0), 'Small' (0–0.05), 'Medium' (0.05–0.1),
+'High' (>0.1). Show order_id, discount, and discount_level. (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT order_id, discount,
+  CASE
+    WHEN discount = 0 THEN 'No Discount'
+    WHEN discount <= 0.05 THEN 'Small'
+    WHEN discount <= 0.1 THEN 'Medium'
+    ELSE 'High'
+  END AS discount_level
+FROM `dsb-pt-123456.Super_store.Orders`;
+
+-- +-----------------+----------+----------------+
+-- | order_id        | discount | discount_level |
+-- +-----------------+----------+----------------+
+-- | EG-2018-8260    | 0.0      | No Discount    |
+-- | AO-2016-7110    | 0.0      | No Discount    |
+-- | AO-2016-5771802 | 0.0      | No Discount    |
+-- | ...             | ...      | ...            |
+-- +-----------------+----------+----------------+
+
+/*-------------------------------------------------------------------------------------------------
+Q14 Show all orders with their corresponding product names and categories.
+Show order_id, product_name, and category. (990677 rows)
+-------------------------------------------------------------------------------------------------*/
+
+-- Omitted, duplicated with Q12
+
+/*-------------------------------------------------------------------------------------------------
+Q15 Show all returns with the product details and the customer name who originally ordered.
+Return return_date, product_name, customer_name, and reason_returned. (41868 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT DISTINCT o.order_id, r.return_date, p.product_name, c.customer_name, r.reason_returned
+FROM `dsb-pt-123456.Super_store.Returns` r
+INNER JOIN `dsb-pt-123456.Super_store.Products` p
+  ON r.product_id = p.product_id
+INNER JOIN `dsb-pt-123456.Super_store.Orders` o
+  ON r.order_id = o.order_id
+INNER JOIN `dsb-pt-123456.Super_store.Customers` c
+  ON o.customer_id = c.customer_id
+ORDER BY 1 ASC;
+
+-- COMMENT: There is on purpose of making r.return_date DISTINCT,
+-- the number of rows changes to (50690 rows)
+-- UPDATE ON COMMENT: you should put the order_id as DISTINCT column in SELECT
+-- and the no. of rows should match the no. of rows in Returns table originally (49502 rows).  
+
+-- +---------------------+-----------------------------+-------------------+-----------------+
+-- | return_date         | product_name                | customer_name     | reason_returned |
+-- +---------------------+-----------------------------+-------------------+-----------------+
+-- | 2016-01-10T00:00:00 | Hoover Stove, Black         | Jennifer Halladay | Not Needed      |
+-- | 2016-01-14T00:00:00 | Ikea Classic Bookcase, Pine | Henia Zydlo       | Wrong Item      |
+-- | 2016-01-24T00:00:00 | Sanford Pens, Easy-Erase    | Steve Nguyen      | Wrong Color     |
+-- | ...                 | ...                         | ...               | ...             |
+-- +---------------------+-----------------------------+-------------------+-----------------+
+
+
+/*-------------------------------------------------------------------------------------------------
+Q16: Show all products and their total sales. If a product was never ordered, show 0.
+Return product_name and total_sales. (10292 Rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT
+  p.product_name,
+  p.product_id,
+  CASE WHEN SUM(o.sales) > 0 THEN round(SUM(o.sales),2) ELSE 0 END AS total_sales
+FROM `dsb-pt-123456.Super_store.Products` p
+LEFT JOIN `dsb-pt-123456.Super_store.Orders` o
+  ON p.product_id = o.product_id
+GROUP BY 1, 2
+ORDER BY 3;
+
+
+-- +----------------------------------------------+------------------+-------------+
+-- | product_name                                 | product_id       | total_sales |
+-- +----------------------------------------------+------------------+-------------+
+-- | Barricks Training Table, with Bottom Storage | FUR-TA-10000304  | 0.0         |
+-- | Ames Business Envelopes, Recycled            | OFF-AME-10002697 | 5.38        |
+-- | Stockwell Staples, Metal                     | OFF-FA-10003816  | 6.32        |
+-- | ...                                          | ...              | ...         |
+-- +----------------------------------------------+------------------+-------------+
+
+
+/*-------------------------------------------------------------------------------------------------
+Q17 Find orders placed by customers in the 'Corporate' segment, including the region country.
+Return order_id, customer_name, country, and sales. (296869 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT o.order_id, c.customer_name, r.country, o.sales
+FROM `dsb-pt-123456.Super_store.Orders` o
+INNER JOIN `dsb-pt-123456.Super_store.Customers` c
+  ON o.customer_id = c.customer_id
+INNER JOIN `dsb-pt-123456.Super_store.Regions` r
+  ON o.region_id = r.region_id
+WHERE c.segment = 'Corporate';
+
+-- +--------------+---------------+---------------+--------+
+-- | order_id     | customer_name | country       | sales  |
+-- +--------------+---------------+---------------+--------+
+-- | BN-2018-9770 | Craig Yedwab  | United States | 14.13  |
+-- | NI-2016-4460 | Kean Nguyen   | United States | 11.63  |
+-- | CA-2017-1690 | Ruben Ausman  | United States | 116.28 |
+-- | ...          | ...           | ...           | ...    |
+-- +--------------+---------------+---------------+--------+
+
+
+/*-------------------------------------------------------------------------------------------------
+Q18: Show returns with full order details (sales, quantity, profit) and product info.
+Only include returns where the original order profit was negative. Return return_date, order_id,
+product_name, sales, and profit.  (612 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT r.return_date, o.order_id, p.product_name, o.sales, o.profit
+FROM `dsb-pt-123456.Super_store.Returns` r
+LEFT JOIN `dsb-pt-123456.Super_store.Orders` o
+  ON r.order_id = o.order_id
+LEFT JOIN `dsb-pt-123456.Super_store.Products` p
+  ON r.product_id = p.product_id
+WHERE o.profit < 0;
+
+-- +---------------------+---------------+--------------------------------+--------+--------+
+-- | return_date         | order_id      | product_name                   | sales  | profit |
+-- +---------------------+---------------+--------------------------------+--------+--------+
+-- | 2018-09-23T00:00:00 | ID-2018-23971 | Safco Corner Shelving, Metal   | 15.96  | -1.14  |
+-- | 2018-09-23T00:00:00 | ID-2018-23971 | Safco Corner Shelving, Metal   | 804.17 | -89.35 |
+-- | 2020-01-18T00:00:00 | ID-2019-52902 | Dania Stackable Bookrack, Pine | 327.44 | -92.98 |
+-- | ...                 | ....          | ...                            | ...    | ...    |
+-- +---------------------+---------------+--------------------------------+--------+--------+
+
+
+/*-------------------------------------------------------------------------------------------------
+Q19 Show all customers and the date of their very first order. If they never ordered, show NULL.
+Return customer_name and first_order_date. (795 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT c.customer_name, MIN(o.order_date) AS first_order_date
+FROM `dsb-pt-123456.Super_store.Customers` c
+LEFT JOIN `dsb-pt-123456.Super_store.Orders` o
+  ON c.customer_id = o.customer_id
+GROUP BY c.customer_name;
+
+-- +--------------------+---------------------+
+-- | customer_name      | first_order_date    |
+-- +--------------------+---------------------+
+-- | Aaron Bergman      | 2016-01-31T00:00:00 |
+-- | Adam Shillingsburg | 2016-04-06T00:00:00 |
+-- | Adrian Barton      | 2016-05-07T00:00:00 |
+-- | ...                | ...                 |
+-- +--------------------+---------------------+
+
+
+/*-------------------------------------------------------------------------------------------------
+Q20: Find all customers who ordered at least one product from the 'Storage' subcategory.
+Show customer_id and customer_name. (793 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT customer_id, customer_name
+FROM `dsb-pt-123456.Super_store.Customers`
+WHERE customer_id IN (
+  SELECT DISTINCT o.customer_id
+  FROM `dsb-pt-123456.Super_store.Orders` o
+  INNER JOIN `dsb-pt-123456.Super_store.Products` p
+    ON o.product_id = p.product_id
+  WHERE p.sub_category = 'Storage'
+);
+
+-- +-------------+--------------------+
+-- | customer_id | customer_name      |
+-- +-------------+--------------------+
+-- | AB-10015    | Aaron Bergman      |
+-- | AS-10090    | Adam Shillingsburg |
+-- | AB-10105    | Adrian Barton      |
+-- | ...         | ...                |
+-- +-------------+--------------------+
+
+
+/*-------------------------------------------------------------------------------------------------
+Q21: Find products that were ordered more than 100 times but returned fewer than 5 times. (2811 rows)
+-------------------------------------------------------------------------------------------------*/
+SELECT p.product_id, p.product_name,
+  COUNT(DISTINCT o.order_id) AS order_count,
+  COUNT(DISTINCT r.order_id) AS return_count
+FROM `dsb-pt-123456.Super_store.Products` p
+INNER JOIN `dsb-pt-123456.Super_store.Orders` o
+  ON p.product_id = o.product_id
+LEFT JOIN `dsb-pt-123456.Super_store.Returns` r
+  ON p.product_id = r.product_id
+GROUP BY p.product_id, p.product_name
+HAVING COUNT(DISTINCT o.order_id) > 100
+   AND COUNT(DISTINCT r.order_id) < 5
+Order by 3 DESC;
+
+-- +------------------+----------------------------+-------------+--------------+
+-- | product_id       | product_name               | order_count | return_count |
+-- +------------------+----------------------------+-------------+--------------+
+-- | OFF-ACC-10000687 | Accos Clamps, 12 Pack      | 103         | 0            |
+-- | OFF-ACC-10001281 | Accos Clamps, Bulk Pack    | 140         | 0            |
+-- | OFF-ACC-10004364 | Accos Push Pins, Bulk Pack | 111         | 0            |
+-- | ...              | ...                        | ...         | ...          |
+-- +------------------+----------------------------+-------------+--------------+
+
+

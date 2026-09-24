@@ -1,0 +1,115 @@
+--Which order_id's used Same Day ship mode and quantity < 5?
+select distinct ship_mode
+from dab4pt.store.orders;
+
+select order_id
+from dab4pt.store.orders
+where ship_mode like'Same Day'and quantity<5;
+
+--Which customer_id's ordered from postal code (90049) and sales above or equal 500?
+SELECT customer_id
+from dab4pt.store.orders
+where postal_code=90049 and sales>=500;
+--Show all the products with the sub_category of 'Furnishings'
+select product_id, product_name
+from dab4pt.store.products
+where sub_category like 'Furnishings';
+
+
+select product_id, product_name
+from dab4pt.store.products
+where lower(sub_category) like 'furnishings';
+--which returns include more than one quantity of an item?
+SELECT order_id, product_id, return_date
+from dab4pt.store.`returns`
+where return_quantity >1;
+-- show the products that have product cost to consumer is 18.04
+SELECT *
+from dab4pt.store.products
+where product_cost_to_consumer = 18.04;
+
+--Which countries are in the "EMEA" region? exclude 'Italy' from countries
+SELECT *
+from dab4pt.store.regions
+where region = 'EMEA' and country not like 'Italy';
+
+SELECT *
+from dab4pt.store.regions
+where region = 'EMEA' and country != 'Italy';
+
+
+SELECT *
+from dab4pt.store.regions
+where region = 'EMEA' and country <> 'Italy';
+
+
+SELECT *
+from dab4pt.store.regions
+where region = 'EMEA' and not country = 'Italy';
+
+--Which countries are in the "EMEA" and 'APAC' region? exclude 'Italy' from countries
+
+SELECT *
+from dab4pt.store.regions
+where region in ('EMEA','APAC') and country not like 'Italy';
+
+
+SELECT *
+from dab4pt.store.regions
+where (region ='EMEA' or region= 'APAC') and country not like 'Italy';
+
+-- Classify quantity ordered as:
+--single (1 order), small (2-10 orders), bulk (more than 10).
+select order_id, quantity,
+case
+when quantity=1 then 'single'
+when quantity between 2 and 10 then 'small'
+else 'bulk' end as status
+from dab4pt.store.orders;
+
+select order_id,
+case
+when quantity=1 then 'single'
+when quantity between 2 and 10 then 'small'
+else 'bulk' end as status ,quantity
+from dab4pt.store.orders;
+
+--show the order id ,profit and a new column called profit_level
+--based on the following:
+-- if the profit is less than 0 then 'Negative',
+--if it is equal to 0 then 'Breakeven',
+-- else 'Positive '
+select order_id, profit,
+CASE
+WHEN profit<0 then 'Negative'
+When profit=0 then 'Break-even'
+else 'Positive'
+End as profit_level
+from dab4pt.store.orders;
+
+
+-- Show customer_id, ship_mode, a column called speed
+-- that is equal to 'Fast' if the ship_mode is 'Same Day'and 'First Class', otherwise 'Slow'.
+SELECT customer_id, ship_mode,
+CASE
+when ship_mode in ('Same Day','First Class') then 'Fast'
+else 'Slow'
+End as speed
+from dab4pt.store.orders;
+
+--  Show all orders where the postal code is null
+select *
+from dab4pt.store.orders
+where postal_code is null;
+
+-- Show all orders where the postal code is not null
+
+select *
+from dab4pt.store.orders
+where postal_code is not null;
+
+--Find all orders where the region_id is not recorded
+--and the sales value is greater than 300.
+select *
+from dab4pt.store.orders
+where region_id is null and sales >300;

@@ -1,0 +1,65 @@
+--Find the top 3 regions with the highest average profit
+SELECT region_id,avg(profit)
+FROM dab4pt.store.orders
+group by 1
+order by 2 desc
+limit 3;
+
+--Find the top 3 regions with the highest average profit not first class, with average above 11
+SELECT region_id,avg(profit)
+FROM dab4pt.store.orders
+where ship_mode <> 'First Class'
+group by 1
+Having avg(profit)>11
+order by 2 desc
+limit 3;
+
+
+--Find regions where average profit is greater than .50
+select region_id, avg(profit) as average_profit
+from dab4pt.store.orders
+group by 1
+having average_profit>0.5
+order by 2 asc;
+
+--How many transactions in each ship mode with sum sale greater than 5 Million
+SELECT ship_mode,count(order_id)
+FROM dab4pt.store.orders
+group by 1
+having sum(sales)>5000000;
+
+
+--Inner Join Example
+select *
+from dab4pt.store.orders as o
+inner join dab4pt.store.customers as c
+on o.customer_id=c.customer_id;
+
+-- Show me the name of first 5 customers placed an order in 2016, show customer id, total sales, customer name?
+select o.customer_id,sum(o.sales),c.customer_name
+from dab4pt.store.orders as o
+inner join dab4pt.store.customers as c
+on o.customer_id=c.customer_id
+where extract(year from o.order_date)=2016
+group by 1,3,o.order_date
+order by o.order_date asc
+limit 5;
+
+-- What is the country with the least number of orders ?
+SELECT r.country,count(distinct o.order_id)
+FROM dab4pt.store.orders as o
+inner join dab4pt.store.regions as r
+on o.region_id=r.region_id
+group by 1
+order by 2 asc
+limit 1;
+
+
+-- The company wants to find the top 3 customers who spent the most For each customer, show the total amount spent, total number of orders, total quantity sold.
+select c.customer_name, c.customer_id,sum(o.sales),count(distinct o.order_id),sum(o.quantity)
+from dab4pt.store.orders as o
+inner join dab4pt.store.customers as c
+on o.customer_id=c.customer_id
+group by 1,2
+order by 3 desc
+limit 3

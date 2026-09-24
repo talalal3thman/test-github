@@ -1,0 +1,88 @@
+-- Join Orders table with Returns table
+SELECT *
+FROM dab4pt.store.orders AS o
+INNER JOIN dab4pt.store.`returns` AS re
+  ON
+    o.order_id = re.order_id
+    AND o.product_id = re.product_id;
+
+-- Show me the customers names and id's who didn't placed any order
+SELECT c.customer_name, c.customer_id
+FROM dab4pt.store.customers AS c
+LEFT JOIN dab4pt.store.orders AS o
+  ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL;
+
+-- List product name and number of returns for products with more than 2 returns
+SELECT p.product_name, COUNT(re.product_id) AS qty_returned
+FROM dab4pt.store.products AS p
+LEFT JOIN dab4pt.store.`returns` AS re
+  ON p.product_id = re.product_id
+GROUP BY 1
+HAVING qty_returned > 2
+ORDER BY 2 ASC;
+
+-- For each region name, show the number of distinct customers who placed at least one order there
+SELECT r.region, COUNT(DISTINCT o.customer_id)
+FROM dab4pt.store.regions AS r
+LEFT JOIN dab4pt.store.orders AS o
+  ON r.region_id = o.region_id
+GROUP BY 1;
+
+-- For each region name, show the number of distinct customers who placed at least five orders there
+SELECT r.region, ount(DISTINCT o.customer_id)
+FROM dab4pt.store.regions AS r
+LEFT JOIN dab4pt.store.orders AS o
+  ON r.region_id = o.region_id
+GROUP BY 1
+HAVING COUNT(DISTINCT o.order_id) >= 5;
+
+-- Calculate total sales and total profit for each salesperson
+SELECT r.salesperson, sum(o.sales) AS total_sales, sum(o.profit) AS total_profit
+FROM dab4pt.store.regions AS r
+LEFT JOIN dab4pt.store.orders AS o
+  ON r.region_id = o.region_id
+GROUP BY 1;
+
+--show me the order_id, product name and customer name
+select o.order_id,p.product_name, c.customer_name
+from dab4pt.store.orders as o
+inner join dab4pt.store.products as p
+on o.product_id=p.product_id
+inner join dab4pt.store.customers as c
+on o.customer_id=c.customer_id;
+
+
+----
+
+-- all orders without first class
+Select customer_id,sum(profit)
+From (select *
+from `store.orders`
+where ship_mode <> 'First Class')
+group by 1
+
+
+-- table 2019 orders, avg profit for each customer
+
+select customer_id, avg(profit)
+from
+(select *
+from `store.orders`
+where extract (year from order_date)=2019)
+group by 1
+
+
+
+--Show customer name, customer Id, avg profit from 1 joined table using sub-query
+Select customer_name,customer_id, avg(profit)
+
+from
+(select *
+from dab4pt.store.orders as o
+inner join dab4pt.store.products as p
+using(product_id)
+inner join dab4pt.store.customers as c
+using(customer_id))
+
+group by 1,2
