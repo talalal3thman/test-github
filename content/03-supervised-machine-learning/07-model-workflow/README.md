@@ -21,7 +21,11 @@ Model data from scratch: gather data, clean it, explore it, and then evaluate se
 | Topic | Skills |
 | ------ | ------ |
 | [Slides](./01-slides/) | - Quick review |
+<<<<<<< Updated upstream
 | [Model Workflow (Walkthrough) ](./02-model-workflow/) | - Gather, clean, explore and model a dataset from scratch<br />- Evaluate several models<br />- Split data into testing and training sets using both train/test split and cross-validation and apply both techniques to score a model|
+=======
+| [Model Workflow (Walkthrough) ](./02-notebooks/) | - Gather, clean, explore and model a dataset from scratch<br />- Evaluate several models<br />- Split data into testing and training sets using both train/test split and cross-validation and apply both techniques to score a model|
+>>>>>>> Stashed changes
 
 
 ## Prerequisites
