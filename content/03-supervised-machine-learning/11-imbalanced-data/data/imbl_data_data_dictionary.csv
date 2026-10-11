@@ -1,0 +1,8 @@
+Column Name,Description,Data Type,Typical Range / Values,Example Values
+age,Age of the individual in years.,int64,17 – 90,"25, 37, 52"
+fnlwgt,Final weight — sampling weight from U.S. Census representing the number of similar individuals in the population.,int64,"~10,000 – 1,490,000","77516, 234721"
+education-num,Number of years of formal education completed (corresponds to education category).,int64,1 – 16,"9, 12, 13, 16"
+capital-gain,"Annual income from capital gains (e.g., investments, stocks, real estate).",int64,"0 – 99,999","0, 15024, 7688"
+capital-loss,Annual capital losses in U.S. dollars.,int64,"0 – 4,356","0, 2042"
+hours-per-week,Average number of hours worked per week.,int64,1 – 99,"40, 60"
+class,Target label for income category (>50K or <=50K per year).,object (categorical),"{<=50K, >50K}","<=50K, >50K"
