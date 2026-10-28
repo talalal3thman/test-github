@@ -1,0 +1,2 @@
+model,holdout_MAE_BHD,median_baseline_MAE_BHD,fit_rows,validation_rows,holdout_rows,city_village_active
+Histogram boosting MAE,136.83587701098972,281.4237790606959,19596,6085,6409,False
